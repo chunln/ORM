@@ -1,0 +1,102 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>List</title>
+    <link href="/Script/BootStrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <form id="formWhere">
+            <table class="table  table-bordered">
+                <tr>
+                    <td>姓名：</td>
+                    <td>
+                        <input name="Name" type="text" /></td>
+                    <td>年龄：</td>
+                    <td>
+                        <input name="Age" type="text" /></td>
+                </tr>
+                <tr>
+                    <td>学校：</td>
+                    <td>
+                        <input name="School" type="text" /></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </form>
+        <input type="button" class="btn btn-primary " value="新增" id="btn_Add" url="/SqlServer/Add" />
+        <table id="dataTable" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>名字</th>
+                    <th>性别</th>
+                    <th>年龄</th>
+                    <th>电话</th>
+                    <th>住址</th>
+                    <th>学校名称</th>
+                    <th>学校地址</th>
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</body>
+</html>
+<script src="/Script/Jquery/jquery-1.11.3.min.js"></script>
+<script src="/Script/BootStrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        Search();
+        $("#btn_Add").click(function () {
+            $('.modal').modal('show');
+            $(".modal-body").html("").load($(this).attr("url"));
+        });
+    });
+    function Search() {
+        $.post("/SqlServer/GetList", $("#formWhere").serialize(), function (data) {
+            var tbodyObj = $("#dataTable tbody");
+
+            $(data).each(function () {
+                var tr = $("<tr>", {
+                    children: [
+                        $("<td>", { text: $(this)["Name"] }),
+                        $("<td>", { text: $(this)["Gender"] }),
+                        $("<td>", { text: $(this)["Age"] }),
+                        $("<td>", { text: $(this)["Phone"] }),
+                        $("<td>", { text: $(this)["Address"] }),
+                        $("<td>", { text: $(this)["SchoolName"] }),
+                        $("<td>", { text: $(this)["SchoolAddress"] }),
+                        $("<td>", { text: $(this)["CreateTime"] })
+                    ]
+                });
+                $(tr).appendTo(tbodyObj);
+            });
+        });
+    }
+</script>
